@@ -1,0 +1,112 @@
+{
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+  "UUID": "com.edgeoverlays.iracing",
+  "Name": "Edge Overlays",
+  "Version": "1.0.0.0",
+  "Author": "Rob Edgell",
+  "Description": "Control iRacing overlays from your Stream Deck",
+  "Icon": "imgs/plugin-icon",
+  "CodePath": "bin/plugin.js",
+  "Nodejs": { "Version": "20", "Debug": "enabled" },
+  "SDKVersion": 2,
+  "Software": { "MinimumVersion": "6.6" },
+  "OS": [
+    { "Platform": "windows", "MinimumVersion": "10" },
+    { "Platform": "mac", "MinimumVersion": "13" }
+  ],
+  "Actions": [
+    {
+      "UUID": "com.edgeoverlays.iracing.toggle-overlay",
+      "Name": "Toggle Overlay",
+      "Icon": "imgs/actions/toggle-overlay",
+      "PropertyInspectorPath": "ui/toggle-overlay.html",
+      "States": [
+        { "Image": "imgs/states/overlay-off", "Name": "Hidden" },
+        { "Image": "imgs/states/overlay-on", "Name": "Visible" }
+      ],
+      "Controllers": ["Keypad"]
+    },
+    {
+      "UUID": "com.edgeoverlays.iracing.toggle-all",
+      "Name": "Toggle All Overlays",
+      "Icon": "imgs/actions/toggle-all",
+      "States": [
+        { "Image": "imgs/states/all-off", "Name": "Hidden" },
+        { "Image": "imgs/states/all-on", "Name": "Visible" }
+      ],
+      "Controllers": ["Keypad"]
+    },
+    {
+      "UUID": "com.edgeoverlays.iracing.activate-layout",
+      "Name": "Activate Layout",
+      "Icon": "imgs/actions/activate-layout",
+      "PropertyInspectorPath": "ui/activate-layout.html",
+      "States": [
+        { "Image": "imgs/states/layout-inactive", "Name": "Inactive" },
+        { "Image": "imgs/states/layout-active", "Name": "Active" }
+      ],
+      "Controllers": ["Keypad"]
+    },
+    {
+      "UUID": "com.edgeoverlays.iracing.launch-vr",
+      "Name": "Launch VR",
+      "Icon": "imgs/actions/launch-vr",
+      "States": [
+        { "Image": "imgs/states/vr-off", "Name": "Stopped" },
+        { "Image": "imgs/states/vr-on", "Name": "Running" }
+      ],
+      "Controllers": ["Keypad"]
+    },
+    {
+      "UUID": "com.edgeoverlays.iracing.reset-fuel",
+      "Name": "Reset Fuel",
+      "Icon": "imgs/actions/reset-fuel",
+      "States": [
+        { "Image": "imgs/states/fuel-reset" }
+      ],
+      "Controllers": ["Keypad"]
+    },
+    {
+      "UUID": "com.edgeoverlays.iracing.toggle-lock",
+      "Name": "Toggle Lock",
+      "Icon": "imgs/actions/toggle-lock",
+      "States": [
+        { "Image": "imgs/states/unlocked", "Name": "Unlocked" },
+        { "Image": "imgs/states/locked", "Name": "Locked" }
+      ],
+      "Controllers": ["Keypad"]
+    },
+    {
+      "UUID": "com.edgeoverlays.iracing.toggle-setting",
+      "Name": "Toggle Setting",
+      "Icon": "imgs/actions/toggle-setting",
+      "PropertyInspectorPath": "ui/toggle-setting.html",
+      "States": [
+        { "Image": "imgs/states/setting-off", "Name": "Off" },
+        { "Image": "imgs/states/setting-on", "Name": "On" }
+      ],
+      "Controllers": ["Keypad"]
+    },
+    {
+      "UUID": "com.edgeoverlays.iracing.adjust-cars",
+      "Name": "Adjust Cars",
+      "Icon": "imgs/actions/adjust-cars",
+      "PropertyInspectorPath": "ui/adjust-cars.html",
+      "States": [
+        { "Image": "imgs/states/adjust" }
+      ],
+      "Controllers": ["Keypad"]
+    },
+    {
+      "UUID": "com.edgeoverlays.iracing.toggle-visible-field",
+      "Name": "Toggle Visible Field",
+      "Icon": "imgs/actions/toggle-visible-field",
+      "PropertyInspectorPath": "ui/toggle-visible-field.html",
+      "States": [
+        { "Image": "imgs/states/field-off", "Name": "Hidden" },
+        { "Image": "imgs/states/field-on", "Name": "Visible" }
+      ],
+      "Controllers": ["Keypad"]
+    }
+  ]
+}
