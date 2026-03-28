@@ -19,13 +19,13 @@
     </select>
   </sdpi-item>
   <sdpi-item label="Direction">
-    <sdpi-radio setting="direction">
+    <select id="directionSelect" class="sdpi-item-value">
       <option value="increment">Increment (+)</option>
       <option value="decrement">Decrement (-)</option>
-    </sdpi-radio>
+    </select>
   </sdpi-item>
   <sdpi-item label="Step Size">
-    <sdpi-textfield setting="step" type="number" value="1"></sdpi-textfield>
+    <input id="stepInput" class="sdpi-item-value" type="number" value="1" min="1" max="10" />
   </sdpi-item>
 
   <script>
@@ -42,18 +42,23 @@
 
     const overlaySelect = document.getElementById('overlaySelect');
     const settingSelect = document.getElementById('settingSelect');
+    const directionSelect = document.getElementById('directionSelect');
+    const stepInput = document.getElementById('stepInput');
 
     SDPIComponents.streamDeckClient.didReceiveSettings.subscribe((settings) => {
       if (settings.overlayType) overlaySelect.value = settings.overlayType;
+      if (settings.direction) directionSelect.value = settings.direction;
+      if (settings.step) stepInput.value = settings.step;
       populateSettings(settings.overlayType, settings.setting);
     });
 
     overlaySelect.addEventListener('change', () => {
       populateSettings(overlaySelect.value, '');
-      saveSettings();
+      saveAllSettings();
     });
-
-    settingSelect.addEventListener('change', saveSettings);
+    settingSelect.addEventListener('change', saveAllSettings);
+    directionSelect.addEventListener('change', saveAllSettings);
+    stepInput.addEventListener('change', saveAllSettings);
 
     function populateSettings(overlayType, currentSetting) {
       settingSelect.innerHTML = '';
@@ -76,10 +81,12 @@
       });
     }
 
-    function saveSettings() {
+    function saveAllSettings() {
       SDPIComponents.streamDeckClient.setSettings({
         overlayType: overlaySelect.value,
         setting: settingSelect.value,
+        direction: directionSelect.value,
+        step: Number(stepInput.value) || 1,
       });
     }
   </script>
