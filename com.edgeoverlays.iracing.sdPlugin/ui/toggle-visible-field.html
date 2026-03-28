@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://sdpi-components.dev/releases/v3/sdpi-components.css" />
+  <script src="https://sdpi-components.dev/releases/v3/sdpi-components.js"></script>
+</head>
+<body>
+  <sdpi-item label="Overlay">
+    <select id="overlaySelect" class="sdpi-item-value">
+      <option value="">Select overlay...</option>
+      <option value="racing-relative">Relative</option>
+      <option value="racing-leaderboard">Leaderboard</option>
+      <option value="racing-weather">Weather</option>
+    </select>
+  </sdpi-item>
+  <sdpi-item label="Field">
+    <select id="fieldSelect" class="sdpi-item-value">
+      <option value="" disabled selected>Select overlay first...</option>
+    </select>
+  </sdpi-item>
+
+  <script>
+    const FIELDS = {
+      'racing-relative': [
+        { value: 'position', label: 'Position' },
+        { value: 'positionChange', label: 'Position Change' },
+        { value: 'gap', label: 'Gap' },
+        { value: 'carNumber', label: 'Car Number' },
+        { value: 'manufacturer', label: 'Manufacturer' },
+        { value: 'countryFlag', label: 'Country Flag' },
+        { value: 'driverName', label: 'Driver Name' },
+        { value: 'bestLap', label: 'Best Lap' },
+        { value: 'lastLap', label: 'Last Lap' },
+        { value: 'avgLap', label: 'Average Lap' },
+        { value: 'stint', label: 'Stint' },
+        { value: 'tireCompound', label: 'Tire Compound' },
+        { value: 'safetyRating', label: 'Safety Rating' },
+        { value: 'iRating', label: 'iRating' },
+        { value: 'iRatingChange', label: 'iRating Change' },
+        { value: 'pitLane', label: 'Pit Lane' },
+        { value: 'pitStall', label: 'Pit Stall' },
+        { value: 'flags', label: 'Flags' },
+        { value: 'lastLapDelta', label: 'Last Lap Delta' },
+        { value: 'bestLapDelta', label: 'Best Lap Delta' },
+        { value: 'p2p', label: 'Push to Pass' },
+      ],
+      'racing-leaderboard': [
+        { value: 'position', label: 'Position' },
+        { value: 'positionChange', label: 'Position Change' },
+        { value: 'carClass', label: 'Car Class' },
+        { value: 'carNumber', label: 'Car Number' },
+        { value: 'manufacturer', label: 'Manufacturer' },
+        { value: 'countryFlag', label: 'Country Flag' },
+        { value: 'driverName', label: 'Driver Name' },
+        { value: 'lastLap', label: 'Last Lap' },
+        { value: 'bestLap', label: 'Best Lap' },
+        { value: 'avgLap', label: 'Average Lap' },
+        { value: 'safetyRating', label: 'Safety Rating' },
+        { value: 'iRating', label: 'iRating' },
+        { value: 'iRatingChange', label: 'iRating Change' },
+        { value: 'gap', label: 'Gap' },
+        { value: 'interval', label: 'Interval' },
+        { value: 'flags', label: 'Flags' },
+        { value: 'sessionInfo', label: 'Session Info' },
+        { value: 'simTime', label: 'Sim Time' },
+        { value: 'realTime', label: 'Real Time' },
+        { value: 'lapNumber', label: 'Lap Number' },
+        { value: 'stintLap', label: 'Stint Lap' },
+        { value: 'prevStint', label: 'Previous Stint' },
+        { value: 'lastPittedLap', label: 'Last Pitted Lap' },
+        { value: 'tireCompound', label: 'Tire Compound' },
+        { value: 'pitLane', label: 'Pit Lane' },
+        { value: 'pitStall', label: 'Pit Stall' },
+        { value: 'lastLapDelta', label: 'Last Lap Delta' },
+        { value: 'bestLapDelta', label: 'Best Lap Delta' },
+        { value: 'p2p', label: 'Push to Pass' },
+      ],
+      'racing-weather': [
+        { value: 'trackTemp', label: 'Track Temp' },
+        { value: 'airTemp', label: 'Air Temp' },
+        { value: 'wind', label: 'Wind' },
+        { value: 'precipitation', label: 'Precipitation' },
+        { value: 'trackWetness', label: 'Track Wetness' },
+      ],
+    };
+
+    const overlaySelect = document.getElementById('overlaySelect');
+    const fieldSelect = document.getElementById('fieldSelect');
+
+    SDPIComponents.streamDeckClient.didReceiveSettings.subscribe((settings) => {
+      if (settings.overlayType) overlaySelect.value = settings.overlayType;
+      populateFields(settings.overlayType, settings.field);
+    });
+
+    overlaySelect.addEventListener('change', () => {
+      populateFields(overlaySelect.value, '');
+      saveSettings();
+    });
+
+    fieldSelect.addEventListener('change', saveSettings);
+
+    function populateFields(overlayType, currentField) {
+      fieldSelect.innerHTML = '';
+      const items = FIELDS[overlayType] || [];
+      if (items.length === 0) {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.disabled = true;
+        opt.selected = true;
+        opt.textContent = 'Select overlay first...';
+        fieldSelect.appendChild(opt);
+        return;
+      }
+      items.forEach((item) => {
+        const opt = document.createElement('option');
+        opt.value = item.value;
+        opt.textContent = item.label;
+        if (item.value === currentField) opt.selected = true;
+        fieldSelect.appendChild(opt);
+      });
+    }
+
+    function saveSettings() {
+      SDPIComponents.streamDeckClient.setSettings({
+        overlayType: overlaySelect.value,
+        field: fieldSelect.value,
+      });
+    }
+  </script>
+</body>
+</html>

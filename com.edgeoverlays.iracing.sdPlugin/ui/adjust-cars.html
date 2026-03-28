@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://sdpi-components.dev/releases/v3/sdpi-components.css" />
+  <script src="https://sdpi-components.dev/releases/v3/sdpi-components.js"></script>
+</head>
+<body>
+  <sdpi-item label="Overlay">
+    <select id="overlaySelect" class="sdpi-item-value">
+      <option value="">Select overlay...</option>
+      <option value="racing-relative">Relative</option>
+      <option value="racing-leaderboard">Leaderboard</option>
+    </select>
+  </sdpi-item>
+  <sdpi-item label="Setting">
+    <select id="settingSelect" class="sdpi-item-value">
+      <option value="" disabled selected>Select overlay first...</option>
+    </select>
+  </sdpi-item>
+  <sdpi-item label="Direction">
+    <sdpi-radio setting="direction">
+      <option value="increment">Increment (+)</option>
+      <option value="decrement">Decrement (-)</option>
+    </sdpi-radio>
+  </sdpi-item>
+  <sdpi-item label="Step Size">
+    <sdpi-textfield setting="step" type="number" value="1"></sdpi-textfield>
+  </sdpi-item>
+
+  <script>
+    const SETTINGS = {
+      'racing-relative': [
+        { value: 'carsAround', label: 'Cars Around' },
+      ],
+      'racing-leaderboard': [
+        { value: 'driversAround', label: 'Cars Around' },
+        { value: 'topCarsMyClass', label: 'Top Cars My Class' },
+        { value: 'topCarsOtherClasses', label: 'Top Cars Other Classes' },
+      ],
+    };
+
+    const overlaySelect = document.getElementById('overlaySelect');
+    const settingSelect = document.getElementById('settingSelect');
+
+    SDPIComponents.streamDeckClient.didReceiveSettings.subscribe((settings) => {
+      if (settings.overlayType) overlaySelect.value = settings.overlayType;
+      populateSettings(settings.overlayType, settings.setting);
+    });
+
+    overlaySelect.addEventListener('change', () => {
+      populateSettings(overlaySelect.value, '');
+      saveSettings();
+    });
+
+    settingSelect.addEventListener('change', saveSettings);
+
+    function populateSettings(overlayType, currentSetting) {
+      settingSelect.innerHTML = '';
+      const items = SETTINGS[overlayType] || [];
+      if (items.length === 0) {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.disabled = true;
+        opt.selected = true;
+        opt.textContent = 'Select overlay first...';
+        settingSelect.appendChild(opt);
+        return;
+      }
+      items.forEach((item) => {
+        const opt = document.createElement('option');
+        opt.value = item.value;
+        opt.textContent = item.label;
+        if (item.value === currentSetting) opt.selected = true;
+        settingSelect.appendChild(opt);
+      });
+    }
+
+    function saveSettings() {
+      SDPIComponents.streamDeckClient.setSettings({
+        overlayType: overlaySelect.value,
+        setting: settingSelect.value,
+      });
+    }
+  </script>
+</body>
+</html>
