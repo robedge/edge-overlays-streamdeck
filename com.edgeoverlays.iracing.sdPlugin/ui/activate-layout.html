@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://sdpi-components.dev/releases/v3/sdpi-components.css" />
+  <script src="https://sdpi-components.dev/releases/v3/sdpi-components.js"></script>
+</head>
+<body>
+  <sdpi-item label="Layout">
+    <select id="layoutSelect" class="sdpi-item-value">
+      <option value="" disabled selected>Loading layouts...</option>
+    </select>
+  </sdpi-item>
+  <sdpi-item label="">
+    <sdpi-button id="refreshBtn" value="Refresh Layouts"></sdpi-button>
+  </sdpi-item>
+
+  <script>
+    const select = document.getElementById('layoutSelect');
+    const refreshBtn = document.getElementById('refreshBtn');
+    let currentLayoutId = '';
+
+    // When sdpi-components is ready, request layouts from plugin
+    SDPIComponents.streamDeckClient.didReceiveSettings.subscribe((settings) => {
+      currentLayoutId = settings.layoutId || '';
+      requestLayouts();
+    });
+
+    // Handle layout list from plugin
+    SDPIComponents.streamDeckClient.didReceivePluginMessage.subscribe((payload) => {
+      if (payload.event === 'layouts') {
+        populateLayouts(payload.layouts);
+      }
+    });
+
+    function requestLayouts() {
+      SDPIComponents.streamDeckClient.sendToPlugin({ command: 'getLayouts' });
+    }
+
+    function populateLayouts(layouts) {
+      select.innerHTML = '';
+      if (!layouts || layouts.length === 0) {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.disabled = true;
+        opt.selected = true;
+        opt.textContent = 'No layouts found (is Edge Overlays running?)';
+        select.appendChild(opt);
+        return;
+      }
+
+      layouts.forEach((layout) => {
+        const opt = document.createElement('option');
+        opt.value = layout.id;
+        opt.textContent = layout.name;
+        if (layout.id === currentLayoutId) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    select.addEventListener('change', () => {
+      const selectedOption = select.options[select.selectedIndex];
+      SDPIComponents.streamDeckClient.setSettings({
+        layoutId: select.value,
+        layoutName: selectedOption.textContent,
+      });
+    });
+
+    refreshBtn.addEventListener('click', requestLayouts);
+  </script>
+</body>
+</html>
