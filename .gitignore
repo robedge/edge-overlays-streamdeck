@@ -1,0 +1,5 @@
+node_modules/
+com.edgeoverlays.iracing.sdPlugin/bin/
+com.edgeoverlays.iracing.sdPlugin/logs/
+*.js.map
+dist/
