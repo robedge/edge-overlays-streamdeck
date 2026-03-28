@@ -27,7 +27,7 @@
     });
 
     // Handle layout list from plugin
-    SDPIComponents.streamDeckClient.didReceivePluginMessage.subscribe((payload) => {
+    SDPIComponents.streamDeckClient.sendToPropertyInspector.subscribe((payload) => {
       if (payload.event === 'layouts') {
         populateLayouts(payload.layouts);
       }
