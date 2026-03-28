@@ -19,11 +19,15 @@
     const select = document.getElementById('layoutSelect');
     const refreshBtn = document.getElementById('refreshBtn');
     let currentLayoutId = '';
+    let hasRequestedLayouts = false;
 
-    // When sdpi-components is ready, request layouts from plugin
+    // Listen for settings (to know which layout is currently selected)
     SDPIComponents.streamDeckClient.didReceiveSettings.subscribe((settings) => {
       currentLayoutId = settings.layoutId || '';
-      requestLayouts();
+      if (!hasRequestedLayouts) {
+        hasRequestedLayouts = true;
+        requestLayouts();
+      }
     });
 
     // Handle layout list from plugin
@@ -32,6 +36,14 @@
         populateLayouts(payload.layouts);
       }
     });
+
+    // Also request layouts after a short delay in case didReceiveSettings doesn't fire
+    setTimeout(() => {
+      if (!hasRequestedLayouts) {
+        hasRequestedLayouts = true;
+        requestLayouts();
+      }
+    }, 500);
 
     function requestLayouts() {
       SDPIComponents.streamDeckClient.sendToPlugin({ command: 'getLayouts' });
@@ -66,7 +78,10 @@
       });
     });
 
-    refreshBtn.addEventListener('click', requestLayouts);
+    refreshBtn.addEventListener('click', () => {
+      hasRequestedLayouts = true;
+      requestLayouts();
+    });
   </script>
 </body>
 </html>
