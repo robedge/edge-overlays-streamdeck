@@ -7,6 +7,7 @@ type Settings = {
   setting: string
   direction: 'increment' | 'decrement'
   step: number
+  [key: string]: string | number
 }
 
 @action({ UUID: 'com.edgeoverlays.iracing.adjust-cars' })

@@ -1,10 +1,11 @@
-import streamDeck, { action, type KeyDownEvent, type DidReceiveSettingsEvent, SingletonAction, type WillAppearEvent, type SendToPluginEvent } from '@elgato/streamdeck'
+import streamDeck, { action, type KeyDownEvent, type DidReceiveSettingsEvent, SingletonAction, type WillAppearEvent } from '@elgato/streamdeck'
 import { edgeClient } from '../edge-client'
 import { stateManager } from '../state-manager'
 
 type Settings = {
   layoutId: string
   layoutName: string
+  [key: string]: string
 }
 
 @action({ UUID: 'com.edgeoverlays.iracing.activate-layout' })
@@ -14,7 +15,7 @@ export class ActivateLayoutAction extends SingletonAction<Settings> {
     if (layoutName) {
       ev.action.setTitle(layoutName)
     }
-    if (layoutId) {
+    if (layoutId && 'setState' in ev.action) {
       const isActive = stateManager.isLayoutActive(layoutId)
       ev.action.setState(isActive ? 1 : 0)
     }
@@ -26,7 +27,7 @@ export class ActivateLayoutAction extends SingletonAction<Settings> {
     if (layoutName) {
       ev.action.setTitle(layoutName)
     }
-    if (layoutId) {
+    if (layoutId && 'setState' in ev.action) {
       const isActive = stateManager.isLayoutActive(layoutId)
       ev.action.setState(isActive ? 1 : 0)
     }
@@ -48,7 +49,8 @@ export class ActivateLayoutAction extends SingletonAction<Settings> {
   }
 
   /** Handle requests from the Property Inspector for layout list */
-  override async onSendToPlugin(ev: SendToPluginEvent): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  override async onSendToPlugin(ev: any): Promise<void> {
     const payload = ev.payload as Record<string, unknown>
     if (payload.command === 'getLayouts') {
       const layouts = await edgeClient.getLayouts()
@@ -62,7 +64,7 @@ export class ActivateLayoutAction extends SingletonAction<Settings> {
   private updateAllVisuals(): void {
     for (const action of this.actions) {
       action.getSettings().then((settings) => {
-        if (settings.layoutId) {
+        if (settings.layoutId && 'setState' in action) {
           const isActive = stateManager.isLayoutActive(settings.layoutId)
           action.setState(isActive ? 1 : 0)
         }

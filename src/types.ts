@@ -132,9 +132,10 @@ export const VISIBLE_FIELDS: Record<string, { value: string; label: string }[]> 
 }
 
 /** Global settings (host/port for Edge Overlays connection) */
-export interface GlobalSettings {
+export type GlobalSettings = {
   host: string
   port: number
+  [key: string]: string | number
 }
 
 export const DEFAULT_GLOBAL_SETTINGS: GlobalSettings = {

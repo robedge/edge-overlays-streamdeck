@@ -8,6 +8,7 @@ export default {
     format: "esm",
     sourcemap: true,
   },
+  external: ["ws"],
   plugins: [
     typescript(),
     nodeResolve({

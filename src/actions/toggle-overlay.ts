@@ -5,6 +5,7 @@ import { OVERLAY_TYPES } from '../types'
 
 type Settings = {
   overlayType: string
+  [key: string]: string
 }
 
 @action({ UUID: 'com.edgeoverlays.iracing.toggle-overlay' })
@@ -20,7 +21,7 @@ export class ToggleOverlayAction extends SingletonAction<Settings> {
     const label = OVERLAY_TYPES.find((o) => o.value === overlayType)?.label ?? overlayType
     ev.action.setTitle(label)
     const visible = stateManager.isOverlayVisible(overlayType)
-    ev.action.setState(visible ? 1 : 0)
+    if ('setState' in ev.action) ev.action.setState(visible ? 1 : 0)
   }
 
   override async onKeyDown(ev: KeyDownEvent<Settings>): Promise<void> {
@@ -43,7 +44,7 @@ export class ToggleOverlayAction extends SingletonAction<Settings> {
       const label = OVERLAY_TYPES.find((o) => o.value === overlayType)?.label ?? overlayType
       ev.action.setTitle(label)
       const visible = stateManager.isOverlayVisible(overlayType)
-      ev.action.setState(visible ? 1 : 0)
+      if ('setState' in ev.action) ev.action.setState(visible ? 1 : 0)
     }
   }
 
@@ -52,7 +53,7 @@ export class ToggleOverlayAction extends SingletonAction<Settings> {
       action.getSettings().then((settings) => {
         if (settings.overlayType) {
           const visible = stateManager.isOverlayVisible(settings.overlayType)
-          action.setState(visible ? 1 : 0)
+          if ('setState' in action) action.setState(visible ? 1 : 0)
         }
       })
     }

@@ -20,14 +20,14 @@ export class ToggleLockAction extends SingletonAction {
 
   private updateVisual(ev: WillAppearEvent): void {
     const state = stateManager.getState()
-    ev.action.setState(state?.locked ? 1 : 0)
+    if ('setState' in ev.action) ev.action.setState(state?.locked ? 1 : 0)
   }
 
   private updateAllVisuals(): void {
     const state = stateManager.getState()
     const targetState = state?.locked ? 1 : 0
     for (const action of this.actions) {
-      action.setState(targetState)
+      if ('setState' in action) action.setState(targetState)
     }
   }
 }

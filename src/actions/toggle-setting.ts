@@ -6,6 +6,7 @@ import { BOOLEAN_SETTINGS } from '../types'
 type Settings = {
   overlayType: string
   setting: string
+  [key: string]: string
 }
 
 @action({ UUID: 'com.edgeoverlays.iracing.toggle-setting' })
@@ -40,7 +41,7 @@ export class ToggleSettingAction extends SingletonAction<Settings> {
     if (overlayType && setting) {
       const settings = stateManager.getOverlaySettings(overlayType)
       const value = settings?.[setting] ?? false
-      ev.action.setState(value ? 1 : 0)
+      if ('setState' in ev.action) ev.action.setState(value ? 1 : 0)
     }
   }
 
@@ -58,7 +59,7 @@ export class ToggleSettingAction extends SingletonAction<Settings> {
         if (settings.overlayType && settings.setting) {
           const overlaySettings = stateManager.getOverlaySettings(settings.overlayType)
           const value = overlaySettings?.[settings.setting] ?? false
-          action.setState(value ? 1 : 0)
+          if ('setState' in action) action.setState(value ? 1 : 0)
         }
       })
     }

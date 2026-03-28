@@ -1,6 +1,6 @@
 import WebSocket from 'ws'
 import streamDeck from '@elgato/streamdeck'
-import type { ApiResponse, FullState, LayoutInfo, StateUpdate, GlobalSettings, DEFAULT_GLOBAL_SETTINGS } from './types'
+import type { ApiResponse, FullState, LayoutInfo, StateUpdate } from './types'
 
 type StateUpdateCallback = (update: StateUpdate) => void
 

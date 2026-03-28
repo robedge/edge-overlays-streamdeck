@@ -6,6 +6,7 @@ import { VISIBLE_FIELDS } from '../types'
 type Settings = {
   overlayType: string
   field: string
+  [key: string]: string
 }
 
 @action({ UUID: 'com.edgeoverlays.iracing.toggle-visible-field' })
@@ -41,7 +42,7 @@ export class ToggleVisibleFieldAction extends SingletonAction<Settings> {
       const settings = stateManager.getOverlaySettings(overlayType)
       const vf = settings?.visibleFields as Record<string, boolean> | undefined
       const value = vf?.[field] ?? false
-      ev.action.setState(value ? 1 : 0)
+      if ('setState' in ev.action) ev.action.setState(value ? 1 : 0)
     }
   }
 
@@ -60,7 +61,7 @@ export class ToggleVisibleFieldAction extends SingletonAction<Settings> {
           const overlaySettings = stateManager.getOverlaySettings(settings.overlayType)
           const vf = overlaySettings?.visibleFields as Record<string, boolean> | undefined
           const value = vf?.[settings.field] ?? false
-          action.setState(value ? 1 : 0)
+          if ('setState' in action) action.setState(value ? 1 : 0)
         }
       })
     }
